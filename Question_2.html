@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Circles demo</title>
+    <script src="https://d3js.org/d3.v5.js"></script>
+</head>
+
+<body>
+    <svg>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    <rect></rect>
+    </svg>
+
+    <script>
+
+        // Task 1
+        // USE D3 to assign width and height of 220 and 220 to the svg and a background color of your liking
+        var my_width = 220;
+        var my_height = 220;
+
+        var svg = d3.select("svg")
+        .attr("width", my_width)
+        .attr("height", my_height)
+        .style("background","navy");
+
+        // Task 2
+        // Draw bar chart (similar to assignment 1) using the following data
+        // The number corresponds to the height of the bar.
+        // You need to use d3's data function
+        // assign radius, color, style of your own liking
+        rect_data_height = [100, 80, 130, 90, 110, 140, 60, 40, 120, 70, 50];
+
+        d3.selectAll("rect")
+        .data(rect_data_height)
+        .attr("x", function(d,i){return i *(my_width/rect_data_height.length)})
+        .attr("y", function(d){return my_height - d})
+        .attr("height", function(d){return d})
+        .attr("width", my_width/rect_data_height.length)
+        .style("fill", "yellow")
+        .style("stroke", "blue");
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Selection</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+
+    <svg>
+    </svg>
+    <br>
+    <button onclick="addRectangle()">Add Rectangle</button>
+    <button onclick="deleteAllRect()">Delete all rectangle</button>
+    
+
+    <script>
+        let svg_width = 220;
+        let svg_height = 220;
+
+        // Task 1
+        // USE D3 to assign width and height of 220 and 220 to the svg and a background color of your liking
+        var svg = d3.select("svg").style("background", "white").attr("width", svg_width).attr("height", svg_height).style("stroke","black");
+
+        // Task 2
+        // implement deleteAllRect function, that delets all the drawn rectangles
+        function deleteAllRect() {
+            svg.selectAll("rect").remove();
+        }
+
+        // Task 3
+        // implement addRectangle function, that adds a rectangle of width 25 and height 25 at random locations
+
+        // Task 4
+        // Extra credit: if you make the rectangles pick a random color (the random color range can be restricted to 5-10 colors)
+
+        function getRandomNum(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function pickRandomColor(min, max){
+            randColorCode = Math.floor(Math.random() * (max - min + 1)) + min;
+
+            // set color default to black
+            color = "purple"
+            switch(randColorCode)
+            {
+                case 1:
+                    color = "yellow";
+                    break;
+                case 2:
+                    color = "green";
+                    break;
+                case 3:
+                    color = "red";
+                    break;
+                case 4:
+                    color = "blue";
+                    break;
+                case 5:
+                    color = "orange";
+                    break;
+            }
+
+            return color;
+        }
+
+
+        function addRectangle() {
+            svg.append("rect")
+            .attr("width", 25)
+            .attr("height", 25)
+            .attr("x", getRandomNum(0, svg_width))
+            .attr("y", getRandomNum(0, svg_height))
+            .style("fill", pickRandomColor(1,5))
+            .style("stroke","black");
+        }
+
+        
+
+    </script>
+</body>
+
+</html>

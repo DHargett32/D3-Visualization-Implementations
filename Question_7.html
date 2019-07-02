@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Circles demo</title>
+    <style>
+        .control_points {
+            fill: black;
+        }
+
+        .bezier_points {
+            fill: red;
+        }
+
+        line {
+            stroke: black;
+        }
+    </style>
+    <script></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+</head>
+
+<body>
+
+    <script>
+
+        // create out svg canvas
+        svg = d3.select("body")
+        .append("svg")
+        .attr("width", 800)
+        .attr("height", 600)
+        .style("background", "lightgrey");
+
+
+        data = [{x:60, y:480},{x:260, y:80},{x:410, y:80},{x:520, y:500}];
+
+        // create our control points using the data in the data[] array
+        circle = svg.selectAll("circle").data(data);
+        circle.enter().append("circle")
+        .attr("id", function(d,i){
+            return "circle" + i;            
+        })
+        .attr("cx", function(d){
+            return d.x;
+        })
+        .attr("cy", function(d){
+            return d.y;
+        })
+        .attr("r", 10);
+
+        // add dragging events for our control points
+        d3.selectAll("circle").call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+
+        function dragstarted (){
+            d3.select(this).attr("fill", "darkred");
+        }
+
+        function dragged(d) {
+            d3.select(this).attr("cx", d.x = d3.event.x)
+            .attr("cy", d.y = d3.event.y);
+            drawBezierCurve();
+        }
+
+        function dragended (){
+            d3.select(this).attr("fill", "black");
+            //drawBezierCurve();
+        }
+
+
+        // draw our bezier curve
+        function drawBezierCurve(){
+
+
+            // delete (render) old curve 
+            renderBezierCurve();
+
+            // create objects for our P0-P3 points and retrieve their x & y locations
+            P0 = {x: d3.select("#circle0").attr("cx"), y: d3.select("#circle0").attr("cy")};
+            P1 = {x: d3.select("#circle1").attr("cx"), y: d3.select("#circle1").attr("cy")};
+            P2 = {x: d3.select("#circle2").attr("cx"), y: d3.select("#circle2").attr("cy")};
+            P3 = {x: d3.select("#circle3").attr("cx"), y: d3.select("#circle3").attr("cy")};
+
+    
+            // calculate the # of bezier points we will be using
+            bezierPointsCount = document.getElementById("sliderValue").innerHTML; //
+
+            var Q = [];
+            // loop through each bezier point, calculate the t-value, and move it to the appropriate destination.
+            for (var i = 0; i < bezierPointsCount; i++) {
+
+                // calculate t-value
+                t = (i)*(1/(bezierPointsCount - 1));
+
+                // Calculate the new x and y values for the circles to graph out our curveusing the formula we learned in class
+                Q[i] = {
+                    x: Math.pow(1 - t, 3) * P0.x + 
+                       Math.pow(1-t, 2) * 3 * t * P1.x + 
+                       (1 - t) * 3 * Math.pow(t,2) * P2.x + 
+                       Math.pow(t, 3) * P3.x,
+                    y: Math.pow(1 - t, 3) * P0.y + 
+                       Math.pow(1-t, 2) * 3 * t * P1.y + 
+                       (1 - t) * 3 * Math.pow(t,2) * P2.y + 
+                       Math.pow(t, 3) * P3.y
+                };          
+           }
+
+           // add the bezier points
+            bezierPoints = svg.selectAll("bezierPoint").data(Q);
+            bezierPoints.enter().append("circle")
+            .attr("id", function(d,i){
+                return "bezierPoint" + i;            
+            })
+            .attr("class", function(d,i){
+                return "bezierPoint"
+            })
+            .attr("cx", function(d){
+                return d.x;
+            })
+            .attr("cy", function(d){
+                return d.y;
+            })
+            .attr("r", 4)
+            .style("fill", "red");
+
+            // connect the bezier points with lines
+            for(var i = 0; i < (Q.length - 1); i++) {
+                bezierPoints.enter().append("line")
+                .attr("x1", function(){
+                    return Q[i].x;
+                })
+                .attr("y1", function(){
+                    return Q[i].y;
+                })
+                .attr("x2", function(){
+                    return Q[i+1].x;
+                })
+                .attr("y2", function(){
+                    return Q[i+1].y;
+                })
+                .style("stroke", "black")
+                .style("stroke-width", "1");
+            }           
+        }
+
+        function updatePointCount(){
+            var slider = document.getElementById("mySlider");
+
+            var output = document.getElementById("sliderValue");
+            output.innerHTML = slider.value;
+            drawBezierCurve();
+        }
+
+        function renderBezierCurve(){
+            svg.selectAll(".bezierPoint").remove();
+            svg.selectAll("line").remove();
+        }
+
+    </script>
+
+    <br>
+    <input type="range" id="mySlider" min="2" max="100" value="2" oninput="updatePointCount()">
+    <p>Value: <span id="sliderValue">2</span></p>
+
+</body>
+
+</html>

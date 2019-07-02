@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Circles demo</title>
+    <script src="https://d3js.org/d3.v5.js"></script>
+</head>
+
+<body>
+
+    <svg>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    <circle></circle>
+    </svg>
+
+    <script>
+
+        // Task 1
+        // USE D3 to assign width and height attribute of 220 and 220 to the svg and a background color of your liking
+
+        var my_width = 220;
+        var my_height = 220;
+
+        var svg = d3.select("svg")
+        .attr("width", my_width)
+        .attr("height", my_height)
+        .style("background","navy");
+
+
+        // Task 2
+        // Draw scatterplot similar to assignment 1 using the following data.
+        // You need to use d3's data method
+        // assign radius, color, style of your own liking
+        circle_data = [{ x: 100, y: 74.6 }, { x: 80, y: 67.7 }, { x: 130, y: 124.4 }, { x: 90, y: 71.1 }, { x: 110, y: 78.1 }, { x: 140, y: 88.4}, { x: 60, y: 69.8}, { x: 40, y: 53.9 }, { x: 120, y: 81.5 }, { x: 70, y: 64.2 }, { x: 50, y: 57.3 }];
+
+
+        d3.selectAll("circle")
+        .data(circle_data)
+        .attr("cx", function(d, i){return d.x;})
+        .attr("cy", function(d, i){return my_height-d.y;})
+        .attr("r", 4)
+        .style("fill", "yellow");
+
+    </script>
+
+</body>
+
+</html>
